@@ -6,18 +6,18 @@ Install driver for Arduino ( Driver for Arduino.zip )
 
 
 ```bash
-$ git clone https://github.com/expressjs/express.git
-$ cd express/Desktop Web Program
+$ git clone git@github.com:vladarwise/Arduino-USART-to-Web-Graphics.git
+$ cd Arduino-USART-to-Web-Graphics/Desktop Web Program
 $ npm install start_app.js
 ```
 
 ## Run
 
 ```bash
-$ cd express/Desktop Web Program
+$ cd Arduino-USART-to-Web-Graphics/Desktop Web Program
 $ node start_app.js
 OR
-$ cd express/Desktop Web Program
+$ cd Arduino-USART-to-Web-Graphics/Desktop Web Program
 $ cmd start.bat
 ```
 
