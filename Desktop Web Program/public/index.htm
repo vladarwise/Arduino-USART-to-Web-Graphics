@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="md-skin boxed-layout mini-navbar">
+    <div id="wrapper">
+        <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+        </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>Статистика по датчикам</h2>
+                </div>
+                <div class="col-lg-2">
+                </div>
+            </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Сводный график</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div>
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Динаміка</h5>
+                        </div>
+                        <div class="ibox-content">
+							<div>
+                                <canvas id="Line1Chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Гістограмма</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div>
+                                <canvas id="BarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="pull-right">
+                Vladarwise
+            </div>
+            <div>
+                <strong>Copyright</strong> Vladarwise
+            </div>
+        </div>
+
+        </div>
+        </div>
+
+	<script src="http://localhost:3001/socket.io/socket.io.js"></script>
+    <script src="/js/jquery-2.1.1.js"></script>
+	<script src="/js/knockout-3.4.1.js"></script>
+    <script src="/js/jquery.slimscroll.min.js"></script>
+	<script src="/js/Chart.min.js"></script>
+    <script src="/js/inspinia.js"></script>
+    <script src="/js/pace.min.js"></script>
+	<script type="text/javascript">
+	function MainViewModel(data) {
+		var self = this;
+		var socket = io.connect('http://localhost:3001');
+		
+		self.radarData = ko.observable({
+			labels: ["Датчик 0", "Датчик 1", "Датчик 2", "Датчик 3", "Датчик 4", "Датчик 5", "Датчик 6", "Датчик 7"],
+			datasets: [
+				{
+					label: "Датчики",
+					fillColor: "rgba(26,179,148,0.2)",
+					strokeColor: "rgba(26,179,148,1)",
+					pointColor: "rgba(26,179,148,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(151,187,205,1)",
+					data: [0, 0, 0, 0, 0, 0, 0, 0]
+				}
+			]
+		});
+
+		self.Line1Data = ko.observable({
+			labels: [],
+			datasets: [
+				{
+					label: "Датчик 0",
+					fillColor: "rgba(237, 0, 28,0)",
+					strokeColor: "rgba(237, 0, 28,0.7)",
+					pointColor: "rgba(237, 0, 28,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(237, 0, 28,1)",
+					data: []
+				},
+				{
+					label: "Датчик 1",
+					fillColor: "rgba(254, 179, 65,0)",
+					strokeColor: "rgba(254, 179, 65,0.7)",
+					pointColor: "rgba(254, 179, 65,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(254, 179, 65,1)",
+					data: []
+				},
+				{
+					label: "Датчик 2",
+					fillColor: "rgba(253, 194, 0,0)",
+					strokeColor: "rgba(253, 194, 0,0.7)",
+					pointColor: "rgba(253, 194, 0,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(253, 194, 0,1)",
+					data: []
+				},
+				{
+					label: "Датчик 3",
+					fillColor: "rgba(176, 247, 104,0)",
+					strokeColor: "rgba(176, 247, 104,0.7)",
+					pointColor: "rgba(176, 247, 104,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(176, 247, 104,1)",
+					data: []
+				},
+
+				{
+					label: "Датчик 4",
+					fillColor: "rgba(0, 169, 188,0)",
+					strokeColor: "rgba(0, 169, 188,1)",
+					pointColor: "rgba(0, 169, 188,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(0, 169, 188,1)",
+					data: []
+				},
+				{
+					label: "Датчик 5",
+					fillColor: "rgba(191, 64, 167,0)",
+					strokeColor: "rgba(191, 64, 167,0.7)",
+					pointColor: "rgba(191, 64, 167,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(191, 64, 167,1)",
+					data: []
+				},
+				{
+					label: "Датчик 6",
+					fillColor: "rgba(147, 124, 195,0)",
+					strokeColor: "rgba(147, 124, 195,0.7)",
+					pointColor: "rgba(147, 124, 195,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(147, 124, 195,1)",
+					data: []
+				},
+				{
+					label: "Датчик 7",
+					fillColor: "rgba(0, 105, 196,0)",
+					strokeColor: "rgba(0, 105, 196,0.7)",
+					pointColor: "rgba(0, 105, 196,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(0, 105, 196,1)",
+					data: []
+				}
+			]
+		});
+		
+		self.BarData = ko.observable({
+			labels: [""],
+			datasets: [
+				{
+					label: "Датчик 0",
+					fillColor: "rgba(237, 0, 28,0.5)",
+					strokeColor: "rgba(237, 0, 28,0.8)",
+					highlightFill: "rgba(237, 0, 28,0.75)",
+					highlightStroke: "rgba(237, 0, 28,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 1",
+					fillColor: "rgba(254, 179, 65,0.5)",
+					strokeColor: "rgba(254, 179, 65,0.8)",
+					highlightFill: "rgba(254, 179, 65,0.75)",
+					highlightStroke: "rgba(254, 179, 65,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 2",
+					fillColor: "rgba(253, 194, 0,0.5)",
+					strokeColor: "rgba(253, 194, 0,0.8)",
+					highlightFill: "rgba(253, 194, 0,0.75)",
+					highlightStroke: "rgba(253, 194, 0,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 3",
+					fillColor: "rgba(176, 247, 104,0.5)",
+					strokeColor: "rgba(176, 247, 104,0.8)",
+					highlightFill: "rgba(176, 247, 104,0.75)",
+					highlightStroke: "rgba(176, 247, 104,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 4",
+					fillColor: "rgba(0, 169, 188,0.5)",
+					strokeColor: "rgba(0, 169, 188,0.8)",
+					highlightFill: "rgba(0, 169, 188,0.75)",
+					highlightStroke: "rgba(0, 169, 188,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 5",
+					fillColor: "rgba(191, 64, 167,0.5)",
+					strokeColor: "rgba(191, 64, 167,0.8)",
+					highlightFill: "rgba(191, 64, 167,0.75)",
+					highlightStroke: "rgba(191, 64, 167,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 6",
+					fillColor: "rgba(147, 124, 195,0.5)",
+					strokeColor: "rgba(147, 124, 195,0.8)",
+					highlightFill: "rgba(147, 124, 195,0.75)",
+					highlightStroke: "rgba(147, 124, 195,1)",
+					data: [0]
+				},
+				{
+					label: "Датчик 7",
+					fillColor: "rgba(0, 105, 196,0.5)",
+					strokeColor: "rgba(0, 105, 196,0.8)",
+					highlightFill: "rgba(0, 105, 196,0.75)",
+					highlightStroke: "rgba(0, 105, 196,1)",
+					data: [0]
+				}
+			]
+		});
+		
+		socket.on('eventData', function (data) {
+			console.log(data);
+			self.radarData().datasets[0].data[0] = data.d0;
+			self.radarData().datasets[0].data[1] = data.d1;
+			self.radarData().datasets[0].data[2] = data.d2;
+			self.radarData().datasets[0].data[3] = data.d3;
+			self.radarData().datasets[0].data[4] = data.d4;
+			self.radarData().datasets[0].data[5] = data.d5;
+			self.radarData().datasets[0].data[6] = data.d6;
+			self.radarData().datasets[0].data[7] = data.d7;
+			self.radarChart();
+
+			if(self.Line1Data().labels.length > 10){
+				self.Line1Data().labels.shift();
+				self.Line1Data().datasets[0].data.shift();
+				self.Line1Data().datasets[1].data.shift();
+				self.Line1Data().datasets[2].data.shift();
+				self.Line1Data().datasets[3].data.shift();
+				self.Line1Data().datasets[4].data.shift();
+				self.Line1Data().datasets[5].data.shift();
+				self.Line1Data().datasets[6].data.shift();
+				self.Line1Data().datasets[7].data.shift();
+			}
+			self.Line1Data().labels.push('');
+			self.Line1Data().datasets[0].data.push(data.d0);
+			self.Line1Data().datasets[1].data.push(data.d1);
+			self.Line1Data().datasets[2].data.push(data.d2);
+			self.Line1Data().datasets[3].data.push(data.d3);
+			self.Line1Data().datasets[4].data.push(data.d4);
+			self.Line1Data().datasets[5].data.push(data.d5);
+			self.Line1Data().datasets[6].data.push(data.d6);
+			self.Line1Data().datasets[7].data.push(data.d7);
+			self.Line1Chart();
+			
+			self.BarData().datasets[0].data[0] = data.d0;
+			self.BarData().datasets[1].data[0] = data.d1;
+			self.BarData().datasets[2].data[0] = data.d2;
+			self.BarData().datasets[3].data[0] = data.d3;
+			self.BarData().datasets[4].data[0] = data.d4;
+			self.BarData().datasets[5].data[0] = data.d5;
+			self.BarData().datasets[6].data[0] = data.d6;
+			self.BarData().datasets[7].data[0] = data.d7;
+			self.BarChart();
+		});
+		
+		self.radarChart = function() {
+			var options = {
+				animation : false,
+				scaleShowLine: true,
+					angleShowLineOut: true,
+					scaleShowLabels: false,
+					scaleBeginAtZero: true,
+					angleLineColor: "rgba(0,0,0,.1)",
+					angleLineWidth: 2,
+					pointLabelFontFamily: "'Arial'",
+					pointLabelFontStyle: "normal",
+					pointLabelFontSize: 10,
+					pointLabelFontColor: "#666",
+					pointDot: true,
+					pointDotRadius: 5,
+					pointDotStrokeWidth: 1,
+					pointHitDetectionRadius: 20,
+					datasetStrokeWidth: 2,
+					datasetFill: true,
+					responsive: true
+			};
+			
+			var ctx = $("#radarChart").get(0).getContext("2d");
+			var myLine = new Chart(ctx).Radar( vm.radarData(), options );
+		}
+		
+		self.Line1Chart = function() {
+			var options = {
+			animation : false,
+				scaleShowGridLines: true,
+				scaleGridLineColor: "rgba(0,0,0,.05)",
+				scaleGridLineWidth: 1,
+				bezierCurve: true,
+				bezierCurveTension: 0.4,
+				pointDot: true,
+				pointDotRadius: 4,
+				pointDotStrokeWidth: 1,
+				pointHitDetectionRadius: 20,
+				datasetStroke: true,
+				datasetStrokeWidth: 2,
+				datasetFill: true,
+				responsive: true
+			};
+			
+			var ctx = $("#Line1Chart").get(0).getContext("2d");
+			var myLine = new Chart(ctx).Line( vm.Line1Data(), options );
+		}
+		
+		self.BarChart = function() {
+			var options = {
+				animation : false,
+				scaleBeginAtZero: true,
+				scaleShowGridLines: true,
+				scaleGridLineColor: "rgba(0,0,0,.05)",
+				scaleGridLineWidth: 1,
+				barShowStroke: true,
+				barStrokeWidth: 2,
+				barValueSpacing: 5,
+				barDatasetSpacing: 1,
+				responsive: true
+			};
+			
+			var ctx = $("#BarChart").get(0).getContext("2d");
+			var myLine = new Chart(ctx).Bar( vm.BarData(), options );
+		}
+	}
+	var vm = new MainViewModel();
+	ko.applyBindings(vm);
+	vm.radarData();
+</script>
+</body>
+</html>

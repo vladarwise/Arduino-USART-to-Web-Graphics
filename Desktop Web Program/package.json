@@ -1,0 +1,23 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node start_app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "co": "^4.6.0",
+    "co-fs": "^1.2.0",
+    "co-prompt": "^1.0.0",
+    "exceljs": "^0.2.37",
+    "express": "^4.14.0",
+    "http": "0.0.0",
+    "minimist": "^1.2.0",
+    "node-run-cmd": "^1.0.1",
+    "node-static": "^0.7.9",
+    "serialport": "^4.0.7",
+    "socket.io": "^1.7.2"
+  }
+}
